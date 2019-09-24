@@ -1,0 +1,21 @@
+service: golem
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  geoindex:
+    handler: handler.indexData
+    events:
+      - schedule: rate(1 minute)
+
+plugins:
+  - serverless-offline
+  - serverless-offline-scheduler
+  - serverless-plugin-scripts
+
+custom:
+  scripts:
+    commands:
+      datasetdownload: node downloadDataset.js
