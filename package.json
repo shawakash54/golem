@@ -5,7 +5,10 @@
   "author": "Akash Shaw",
   "license": "MIT",
   "dependencies": {
-    "serverless-plugin-scripts": "^1.0.2"
+    "@elastic/elasticsearch": "^7.3.0",
+    "line-reader": "^0.4.0",
+    "serverless-plugin-scripts": "^1.0.2",
+    "unzipper": "^0.10.5"
   },
   "devDependencies": {
     "serverless-offline": "^5.11.0",

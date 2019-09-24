@@ -2,10 +2,11 @@ const { parse } = require('url')
 const http = require('https')
 const fs = require('fs')
 const { basename } = require('path')
+const constants = require('./constants')
 
 const TIMEOUT = 10000
 
-function download(url, path) {
+function downloadDataset(url, path) {
   const uri = parse(url)
   if (!path) {
     path = basename(uri.path)
@@ -40,17 +41,25 @@ function download(url, path) {
   })
 }
 
-var dir = './dataset'
-if (!fs.existsSync(dir)){
-  fs.mkdirSync(dir);
-}
+module.exports = {
+  download: function(){
+    return new Promise(function(resolve, reject){
+      var dir = './dataset'
+      if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+      }
 
-const url = 'https://download.geonames.org/export/zip/IN.zip'
-console.log('Downloading ' + url)
-console.log('Downloading file')
-try {
-    download(url, 'dataset/IN.zip')
-} catch (e) {
-    console.log('Download failed')
-    console.log(e.message)
+      const url = constants.FILE_URL
+      console.log('Downloading ' + url)
+      console.log('Downloading file')
+      try {
+        downloadDataset(url, constants.ZIP_DOWNLOAD_PATH).then(() => {
+          resolve()
+        })
+      } catch (e) {
+          console.log('Download failed')
+          console.log(e.message)
+      }
+    })
+  }
 }

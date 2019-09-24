@@ -8,7 +8,7 @@ functions:
   geoindex:
     handler: handler.indexData
     events:
-      - schedule: rate(1 minute)
+      - schedule: rate(30 days)
 
 plugins:
   - serverless-offline
@@ -19,3 +19,5 @@ custom:
   scripts:
     commands:
       datasetdownload: node downloadDataset.js
+    hooks:
+      'deploy:finalize': sls invoke -f geoindex
