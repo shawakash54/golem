@@ -1,5 +1,8 @@
 # Golem
 
+A service which operates on an open sourced dataset to index data to ES which can be used later on
+to perform free text searches to get lat, long, region, state of a place, or postal code.
+
 ### Create an .env file with following contents:
 ES_HOST=<YOUR_ES_HOST>
 
@@ -25,6 +28,44 @@ ES_HOST=<YOUR_ES_HOST>
 
 ##### Run the task and check the logs to see it in action.
 
+---
+
 ##### Work Pending:
 - Creating a lambda to regularly invoke the fargate task
 
+---
+
+#### To Launch a ES local instance
+- `cd es-docker`
+- `docker-compose up`
+
+---
+
+##### The local ES instance will be up and running at **localhost:9200**
+
+##### The app can also be run as an individual lambda without dockerising it but due to **lambda timeout** limitations, 
+##### it had to be dockerized so as to run it as a long running fargate task.
+
+#### Deploying it as an individual lambda: `sls deploy` && `sls invoke -f geoindex`
+
+---
+
+
+##### Sample ES Search query for the operation:
+
+```
+GET _search
+{
+  "query": 
+  {
+    "query_string": 
+    {
+      "query" : "*ca*",
+      "fields":
+      [
+        "place", "postalCode"
+      ]
+    }
+  }
+}
+```
