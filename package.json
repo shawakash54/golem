@@ -5,8 +5,10 @@
   "author": "Akash Shaw",
   "license": "MIT",
   "dependencies": {
-    "@elastic/elasticsearch": "^7.3.0",
+    "dotenv": "^8.1.0",
+    "es6": "npm:@elastic/elasticsearch@^6.8.2",
     "line-reader": "^0.4.0",
+    "md5": "^2.2.1",
     "serverless-plugin-scripts": "^1.0.2",
     "unzipper": "^0.10.5"
   },
@@ -16,7 +18,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install -g serverless && serverless datasetdownload",
+    "build": "npm install -g serverless",
     "start": "sls offline"
   }
 }

@@ -9,6 +9,9 @@ functions:
     handler: handler.indexData
     events:
       - schedule: rate(30 days)
+    environment:
+      ES_HOST: ${self:custom.environment.ES_HOST}
+    timeout: 9000
 
 plugins:
   - serverless-offline
@@ -16,8 +19,10 @@ plugins:
   - serverless-plugin-scripts
 
 custom:
+  stage: ${opt:stage, self:provider.stage}
   scripts:
     commands:
       datasetdownload: node downloadDataset.js
-    hooks:
-      'deploy:finalize': sls invoke -f geoindex
+    # hooks:
+    #   'deploy:finalize': sls invoke -f geoindex --aws-profile shaw
+  environment: ${file(env.yml):${self:custom.stage}, file(env.yml):default}

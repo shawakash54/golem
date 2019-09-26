@@ -6,3 +6,6 @@ jspm_packages
 .serverless
 
 dataset
+tmp
+env.yml
+.env

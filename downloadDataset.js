@@ -44,7 +44,7 @@ function downloadDataset(url, path) {
 module.exports = {
   download: function(){
     return new Promise(function(resolve, reject){
-      var dir = './dataset'
+      var dir = '/tmp'
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
       }
