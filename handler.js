@@ -26,15 +26,15 @@ module.exports.indexData = (event, context) => {
     const unzipPromise = unzip()
     unzipPromise.then(() => {
       console.log(`unzipping completed`)
-
       var chain = Promise.resolve();
+      var count = 1;
       // parsing the file line by line
       lineReader.eachLine(constants.FILE_PATH, function(line, last) {
-        console.log(`Reading line: `, line)
+        console.log(`Reading line: `, [count++, line])
         let lineArr = line.split('\t')
         let [,postalCode, placeName, state,,,,,,lat, long] = lineArr
         let bodyObject = getBodyObject(postalCode, placeName, state, lat, long)
-        // Indexing data to ES
+        //Indexing data to ES
         chain = chain.then( _ => indexES(bodyObject))
       });
     })
@@ -79,7 +79,7 @@ function indexES(bodyObject){
 
 function getRequestObject(bodyObject){
   return {
-    "id": getESIndex(bodyObject.place),
+    "id": getESIndex(bodyObject.place, bodyObject.postalCode, bodyObject.state),
     "index": constants.ES_INDEX,
     "refresh": "true",
     "type": "_doc",
@@ -91,16 +91,16 @@ function getRequestObject(bodyObject){
   }
 }
 
-function getESIndex(str){
-  let esindex = str
+function getESIndex(place, postalCode, state){
+  let esindex = place
         .toLowerCase()
         .replace(/^\s+|\s+$/g, "") // trimming any spaces
-        .replace(/[^A-Za-z0-9 -&,./]/g, "") // removing unsupported characters
         .replace(/\s+/g, "-") // collapsing dashes
         .replace(/ /g,"_") // replace spaces in between with _
         .replace(/^-+/, "") // trim - from start of text
         .replace(/-+$/, "") // trim - from end of text
-  return esindex
+  esindex += postalCode + state
+  return md5(esindex)
 }
 
 function getBodyObject(postalCode, placeName, state, lat, long){
